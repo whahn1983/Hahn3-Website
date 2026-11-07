@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Original artwork for hahn3.com: an aircraft wing above a sea of clouds at sunset.
+  Drawn from scratch as vector shapes and procedural SVG filters (no photography or
+  third-party imagery). Rasterized by scripts/render-art.mjs into src/assets/.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -140 1600 1040" width="1600" height="1040">
+  <defs>
+    <!-- ===== Sky ===== -->
+    <linearGradient id="sky" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="292">
+      <stop offset="0" stop-color="#050f24" />
+      <stop offset="0.28" stop-color="#0c1d3e" />
+      <stop offset="0.52" stop-color="#22325a" />
+      <stop offset="0.68" stop-color="#4c4563" />
+      <stop offset="0.80" stop-color="#9a5b4f" />
+      <stop offset="0.90" stop-color="#df8346" />
+      <stop offset="0.97" stop-color="#f8b25e" />
+      <stop offset="1" stop-color="#ffd48a" />
+    </linearGradient>
+
+    <radialGradient id="sunHalo" gradientUnits="userSpaceOnUse" cx="965" cy="290" r="620"
+      gradientTransform="translate(965 290) scale(1 0.32) translate(-965 -290)">
+      <stop offset="0" stop-color="#fff6dc" stop-opacity="1" />
+      <stop offset="0.03" stop-color="#ffe3a4" stop-opacity="0.95" />
+      <stop offset="0.12" stop-color="#ffb45e" stop-opacity="0.62" />
+      <stop offset="0.35" stop-color="#f07a3a" stop-opacity="0.26" />
+      <stop offset="0.7" stop-color="#c25a3c" stop-opacity="0.08" />
+      <stop offset="1" stop-color="#c25a3c" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="sunCore" gradientUnits="userSpaceOnUse" cx="965" cy="281" r="34">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
+      <stop offset="0.3" stop-color="#fff8e2" stop-opacity="1" />
+      <stop offset="0.6" stop-color="#ffd98f" stop-opacity="0.55" />
+      <stop offset="1" stop-color="#ffb35a" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Cirrus streaks: stretched noise, coloured by the gradient they are drawn with -->
+    <linearGradient id="cirrusTint" gradientUnits="userSpaceOnUse" x1="0" y1="60" x2="0" y2="290">
+      <stop offset="0" stop-color="#5b5a7c" />
+      <stop offset="0.45" stop-color="#b8706a" />
+      <stop offset="0.8" stop-color="#ffa55e" />
+      <stop offset="1" stop-color="#ffd08a" />
+    </linearGradient>
+    <filter id="cirrus" x="0" y="0" width="1600" height="300" filterUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0016 0.021" numOctaves="5" seed="11"
+        result="n" />
+      <feColorMatrix in="n" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3.4 0 0 0 -1.62" result="a" />
+      <feComposite in="SourceGraphic" in2="a" operator="in" />
+    </filter>
+    <linearGradient id="cirrusMaskGrad" gradientUnits="userSpaceOnUse" x1="0" y1="40" x2="0"
+      y2="292">
+      <stop offset="0" stop-color="#fff" stop-opacity="0" />
+      <stop offset="0.35" stop-color="#fff" stop-opacity="0.55" />
+      <stop offset="0.75" stop-color="#fff" stop-opacity="0.9" />
+      <stop offset="1" stop-color="#fff" stop-opacity="0.3" />
+    </linearGradient>
+    <mask id="cirrusMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="300">
+      <rect x="0" y="0" width="1600" height="300" fill="url(#cirrusMaskGrad)" />
+    </mask>
+
+    <!-- ===== Cloud sea ===== -->
+    <linearGradient id="cloudBase" gradientUnits="userSpaceOnUse" x1="0" y1="282" x2="0" y2="900">
+      <stop offset="0" stop-color="#ffc98a" />
+      <stop offset="0.06" stop-color="#e99a62" />
+      <stop offset="0.16" stop-color="#a9675e" />
+      <stop offset="0.3" stop-color="#5a4b66" />
+      <stop offset="0.48" stop-color="#2a3354" />
+      <stop offset="0.7" stop-color="#16213d" />
+      <stop offset="1" stop-color="#0a152a" />
+    </linearGradient>
+
+    <!-- Each band is lit from the sun's position with a point light so that
+         cloud tops facing the sunset catch warm light. Frequencies shrink toward
+         the viewer to fake perspective. -->
+    <filter id="cloudsFar" x="0" y="270" width="1600" height="200" filterUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009 0.045" numOctaves="6" seed="4"
+        result="n" />
+      <feColorMatrix in="n" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.8 0 0 0 -0.45" result="h" />
+      <feDiffuseLighting in="h" surfaceScale="4" diffuseConstant="1.15" lighting-color="#ffd2a0"
+        result="lit">
+        <fePointLight x="965" y="250" z="60" />
+      </feDiffuseLighting>
+      <feComposite in="lit" in2="SourceGraphic" operator="arithmetic" k1="0.95" k2="0" k3="0.28"
+        k4="0" />
+    </filter>
+    <filter id="cloudsMid" x="0" y="320" width="1600" height="360" filterUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0042 0.0125" numOctaves="6" seed="23"
+        result="n" />
+      <feColorMatrix in="n" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.7 0 0 0 -0.4" result="h" />
+      <feDiffuseLighting in="h" surfaceScale="9" diffuseConstant="1.25" lighting-color="#ffc58c"
+        result="lit">
+        <fePointLight x="965" y="200" z="110" />
+      </feDiffuseLighting>
+      <feComposite in="lit" in2="SourceGraphic" operator="arithmetic" k1="0.95" k2="0" k3="0.3"
+        k4="0" />
+    </filter>
+    <filter id="cloudsNear" x="0" y="480" width="1600" height="420" filterUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0024 0.0058" numOctaves="6" seed="41"
+        result="n" />
+      <feColorMatrix in="n" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.6 0 0 0 -0.35" result="h" />
+      <feDiffuseLighting in="h" surfaceScale="14" diffuseConstant="1.2" lighting-color="#e9b48a"
+        result="lit">
+        <fePointLight x="965" y="120" z="170" />
+      </feDiffuseLighting>
+      <feComposite in="lit" in2="SourceGraphic" operator="arithmetic" k1="0.95" k2="0" k3="0.34"
+        k4="0" />
+    </filter>
+
+    <linearGradient id="fadeFar" gradientUnits="userSpaceOnUse" x1="0" y1="282" x2="0" y2="470">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.85" />
+      <stop offset="0.12" stop-color="#fff" stop-opacity="1" />
+      <stop offset="0.55" stop-color="#fff" stop-opacity="1" />
+      <stop offset="1" stop-color="#fff" stop-opacity="0" />
+    </linearGradient>
+    <mask id="maskFar" maskUnits="userSpaceOnUse" x="0" y="270" width="1600" height="200">
+      <rect x="0" y="270" width="1600" height="200" fill="url(#fadeFar)" />
+    </mask>
+    <linearGradient id="fadeMid" gradientUnits="userSpaceOnUse" x1="0" y1="330" x2="0" y2="680">
+      <stop offset="0" stop-color="#fff" stop-opacity="0" />
+      <stop offset="0.3" stop-color="#fff" stop-opacity="1" />
+      <stop offset="0.65" stop-color="#fff" stop-opacity="1" />
+      <stop offset="1" stop-color="#fff" stop-opacity="0" />
+    </linearGradient>
+    <mask id="maskMid" maskUnits="userSpaceOnUse" x="0" y="320" width="1600" height="360">
+      <rect x="0" y="320" width="1600" height="360" fill="url(#fadeMid)" />
+    </mask>
+    <linearGradient id="fadeNear" gradientUnits="userSpaceOnUse" x1="0" y1="480" x2="0" y2="900">
+      <stop offset="0" stop-color="#fff" stop-opacity="0" />
+      <stop offset="0.35" stop-color="#fff" stop-opacity="1" />
+      <stop offset="1" stop-color="#fff" stop-opacity="1" />
+    </linearGradient>
+    <mask id="maskNear" maskUnits="userSpaceOnUse" x="0" y="480" width="1600" height="420">
+      <rect x="0" y="480" width="1600" height="420" fill="url(#fadeNear)" />
+    </mask>
+
+    <!-- Warm reflection on the cloud tops beneath the sun -->
+    <radialGradient id="cloudGlow" gradientUnits="userSpaceOnUse" cx="965" cy="300" r="520"
+      gradientTransform="translate(965 300) scale(1 0.42) translate(-965 -300)">
+      <stop offset="0" stop-color="#ffe2a8" stop-opacity="0.85" />
+      <stop offset="0.18" stop-color="#ffb066" stop-opacity="0.45" />
+      <stop offset="0.5" stop-color="#e07a45" stop-opacity="0.16" />
+      <stop offset="1" stop-color="#e07a45" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="horizonHaze" gradientUnits="userSpaceOnUse" x1="0" y1="262" x2="0" y2="330">
+      <stop offset="0" stop-color="#ffc77c" stop-opacity="0" />
+      <stop offset="0.45" stop-color="#ffd08c" stop-opacity="0.55" />
+      <stop offset="1" stop-color="#ffb06a" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="seaTopFade" gradientUnits="userSpaceOnUse" x1="0" y1="276" x2="0" y2="300">
+      <stop offset="0" stop-color="#fff" stop-opacity="0" />
+      <stop offset="1" stop-color="#fff" stop-opacity="1" />
+    </linearGradient>
+    <mask id="seaMask" maskUnits="userSpaceOnUse" x="0" y="270" width="1600" height="630">
+      <rect x="0" y="276" width="1600" height="24" fill="url(#seaTopFade)" />
+      <rect x="0" y="300" width="1600" height="600" fill="#fff" />
+    </mask>
+
+    <!-- Distant cloud bank breaking up the horizon line -->
+    <filter id="bank" x="0" y="262" width="1600" height="40" filterUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.11" numOctaves="4" seed="9"
+        result="n" />
+      <feColorMatrix in="n" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  4 0 0 0 -1.7" result="a" />
+      <feComposite in="SourceGraphic" in2="a" operator="in" />
+    </filter>
+    <linearGradient id="bankTint" gradientUnits="userSpaceOnUse" x1="0" y1="266" x2="0" y2="296">
+      <stop offset="0" stop-color="#f6b06a" stop-opacity="0" />
+      <stop offset="0.5" stop-color="#f3a466" stop-opacity="0.85" />
+      <stop offset="1" stop-color="#e99a62" stop-opacity="1" />
+    </linearGradient>
+
+    <!-- ===== Wing ===== -->
+    <linearGradient id="wingTop" gradientUnits="userSpaceOnUse" x1="1360" y1="232" x2="1300"
+      y2="360">
+      <stop offset="0" stop-color="#6c7489" />
+      <stop offset="0.12" stop-color="#4c5874" />
+      <stop offset="0.5" stop-color="#33405d" />
+      <stop offset="1" stop-color="#222e48" />
+    </linearGradient>
+    <linearGradient id="wingSpanTint" gradientUnits="userSpaceOnUse" x1="1160" y1="0" x2="1600"
+      y2="0">
+      <stop offset="0" stop-color="#ffb070" stop-opacity="0.34" />
+      <stop offset="0.3" stop-color="#e8946a" stop-opacity="0.1" />
+      <stop offset="1" stop-color="#0b1426" stop-opacity="0.45" />
+    </linearGradient>
+    <linearGradient id="flapFill" gradientUnits="userSpaceOnUse" x1="1400" y1="300" x2="1370"
+      y2="500">
+      <stop offset="0" stop-color="#253049" />
+      <stop offset="1" stop-color="#111a2d" />
+    </linearGradient>
+    <linearGradient id="wingletFill" gradientUnits="userSpaceOnUse" x1="1020" y1="75" x2="1190"
+      y2="220">
+      <stop offset="0" stop-color="#1a2640" />
+      <stop offset="0.6" stop-color="#202d48" />
+      <stop offset="1" stop-color="#34405c" />
+    </linearGradient>
+    <linearGradient id="fairingFill" gradientUnits="userSpaceOnUse" x1="0" y1="260" x2="0" y2="500">
+      <stop offset="0" stop-color="#1c273e" />
+      <stop offset="1" stop-color="#0c1424" />
+    </linearGradient>
+    <linearGradient id="leRim" gradientUnits="userSpaceOnUse" x1="1030" y1="0" x2="1600" y2="0">
+      <stop offset="0" stop-color="#ffd59a" stop-opacity="0.95" />
+      <stop offset="0.45" stop-color="#ffb676" stop-opacity="0.55" />
+      <stop offset="1" stop-color="#d9a48a" stop-opacity="0.18" />
+    </linearGradient>
+
+    <linearGradient id="leHighlight" gradientUnits="userSpaceOnUse" x1="1013" y1="0" x2="1440"
+      y2="0">
+      <stop offset="0" stop-color="#fff1d6" stop-opacity="0.75" />
+      <stop offset="0.45" stop-color="#fff1d6" stop-opacity="0.6" />
+      <stop offset="1" stop-color="#fff1d6" stop-opacity="0" />
+    </linearGradient>
+
+    <filter id="softBlur" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="1.2" />
+    </filter>
+    <filter id="sunBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" />
+    </filter>
+
+    <radialGradient id="vignette" gradientUnits="userSpaceOnUse" cx="900" cy="380" r="1050"
+      gradientTransform="translate(900 380) scale(1 0.72) translate(-900 -380)">
+      <stop offset="0.55" stop-color="#040b1a" stop-opacity="0" />
+      <stop offset="1" stop-color="#040b1a" stop-opacity="0.7" />
+    </radialGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect x="0" y="-140" width="1600" height="440" fill="url(#sky)" />
+  <rect x="0" y="-140" width="1600" height="440" fill="url(#sunHalo)" />
+  <g mask="url(#cirrusMask)" opacity="0.8">
+    <rect x="0" y="0" width="1600" height="300" fill="url(#cirrusTint)" filter="url(#cirrus)" />
+  </g>
+
+  <!-- Cloud sea (base colour, then three lit texture bands) -->
+  <rect x="0" y="276" width="1600" height="624" fill="url(#cloudBase)" mask="url(#seaMask)" />
+  <g mask="url(#maskNear)">
+    <rect x="0" y="480" width="1600" height="420" fill="url(#cloudBase)" filter="url(#cloudsNear)" />
+  </g>
+  <g mask="url(#maskMid)">
+    <rect x="0" y="320" width="1600" height="360" fill="url(#cloudBase)" filter="url(#cloudsMid)" />
+  </g>
+  <g mask="url(#maskFar)">
+    <g mask="url(#seaMask)">
+      <rect x="0" y="270" width="1600" height="200" fill="url(#cloudBase)" filter="url(#cloudsFar)" />
+    </g>
+  </g>
+  <rect x="0" y="282" width="1600" height="618" fill="url(#cloudGlow)" />
+  <rect x="0" y="266" width="1600" height="30" fill="url(#bankTint)" filter="url(#bank)" />
+
+  <!-- Sun -->
+  <circle cx="965" cy="281" r="34" fill="url(#sunCore)" />
+  <ellipse cx="965" cy="281" rx="11" ry="8" fill="#fffdf2" filter="url(#sunBlur)" opacity="0.9" />
+  <ellipse cx="965" cy="281.5" rx="7" ry="5.5" fill="#ffffff" />
+  <rect x="0" y="262" width="1600" height="68" fill="url(#horizonHaze)" opacity="0.75" />
+
+  <!-- Wing -->
+  <g id="wing">
+    <!-- Flap track fairings: canoe bodies protruding aft of the trailing edge -->
+    <path fill="url(#fairingFill)"
+      d="M1258 258 C1242 276 1218 300 1194 322 C1186 330 1191 336 1203 333 C1248 326 1296 308 1326 290 Z" />
+    <path fill="url(#fairingFill)"
+      d="M1398 312 C1382 334 1352 366 1322 396 C1314 405 1320 411 1333 407 C1384 396 1436 370 1470 346 Z" />
+    <path fill="url(#fairingFill)"
+      d="M1544 390 C1528 416 1496 452 1466 484 C1458 493 1464 499 1477 495 C1524 484 1570 460 1600 440 L1600 404 Z" />
+    <g fill="none" stroke="#5a6580" stroke-opacity="0.45" stroke-width="0.9">
+      <path d="M1262 263 C1248 277 1222 300 1197 321" />
+      <path d="M1402 317 C1386 337 1356 368 1327 395" />
+      <path d="M1548 395 C1532 419 1500 452 1471 481" />
+    </g>
+
+    <!-- Flaps / trailing-edge section -->
+    <path fill="url(#flapFill)"
+      d="M1190 216 Q1408 296 1600 430 L1600 502 Q1418 350 1214 234 Z" />
+    <g fill="none" stroke="#0a1222" stroke-opacity="0.6" stroke-width="0.9">
+      <path d="M1258 247 L1268 258" />
+      <path d="M1338 279 L1350 293" />
+      <path d="M1424 318 L1440 337" />
+      <path d="M1514 368 L1532 392" />
+    </g>
+
+    <!-- Upper surface -->
+    <path fill="url(#wingTop)"
+      d="M1146 194 Q1382 240 1600 318 L1600 431 Q1408 297 1190 216 Q1166 205 1146 194 Z" />
+    <path fill="url(#wingSpanTint)"
+      d="M1146 194 Q1382 240 1600 318 L1600 431 Q1408 297 1190 216 Q1166 205 1146 194 Z" />
+
+    <!-- Panel lines -->
+    <g fill="none" stroke="#0d1628" stroke-opacity="0.42" stroke-width="1">
+      <path d="M1214 207 L1236 226" />
+      <path d="M1286 222 L1306 252" />
+      <path d="M1362 239 L1378 282" />
+      <path d="M1442 262 L1452 318" />
+      <path d="M1522 287 L1528 360" />
+      <path d="M1592 314 L1594 420" />
+      <path d="M1172 205 Q1392 262 1600 372" stroke-opacity="0.3" />
+      <path d="M1250 236 L1300 249 M1336 258 L1392 276 M1428 290 L1484 312 M1520 326 L1572 350"
+        stroke-opacity="0.28" />
+    </g>
+
+    <!-- Winglet -->
+    <path fill="url(#wingletFill)"
+      d="M1012 72 L1056 76 Q1060 81 1064 90 L1190 216 Q1166 205 1146 194 Q1078 134 1012 72 Z" />
+    <path fill="#0e1729" fill-opacity="0.38"
+      d="M1056 76 Q1060 81 1064 90 L1190 216 L1174 209 L1050 85 Z" />
+
+    <!-- Warm rim light along the leading edges, facing the sunset -->
+    <path fill="none" stroke="url(#leRim)" stroke-width="2.4" stroke-linecap="round"
+      filter="url(#softBlur)" d="M1013 73 Q1078 134 1146 194 Q1382 240 1600 318" />
+    <path fill="none" stroke="url(#leHighlight)" stroke-width="0.8" stroke-linecap="round"
+      d="M1013 73 Q1078 134 1146 194 Q1290 222 1440 261" />
+    <path fill="none" stroke="#ffd7a8" stroke-opacity="0.5" stroke-width="0.8"
+      d="M1013 72.5 L1056 76" />
+  </g>
+
+  <!-- Vignette -->
+  <rect x="0" y="-140" width="1600" height="1040" fill="url(#vignette)" />
+</svg>

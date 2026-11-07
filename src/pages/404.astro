@@ -1,0 +1,25 @@
+---
+import ButtonLink from '../components/ButtonLink.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title={`Page not found — ${site.name}`} noindex>
+  <section
+    class="mx-auto flex min-h-[70dvh] max-w-3xl flex-col items-start justify-center px-5 pt-32 pb-20 sm:px-8"
+    aria-labelledby="not-found-title"
+  >
+    <p class="eyebrow text-accent-300">Error 404</p>
+    <h1 id="not-found-title" class="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+      This page is off the flight plan.
+    </h1>
+    <p class="mt-5 text-lg text-slate-300">
+      The page you were looking for doesn’t exist or has moved.
+    </p>
+    <div class="mt-10">
+      <ButtonLink href="/" icon="arrow-right">
+        Back to home
+      </ButtonLink>
+    </div>
+  </section>
+</BaseLayout>

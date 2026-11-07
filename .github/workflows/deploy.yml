@@ -1,0 +1,89 @@
+# Builds the Astro static site and publishes it to GitHub Pages at https://hahn3.com.
+#
+# One-time repository setup (see README → Deployment):
+#   Settings → Pages → Build and deployment → Source: "GitHub Actions"
+#   Settings → Pages → Custom domain: hahn3.com  (then "Enforce HTTPS")
+# Optional repository *variables* (Settings → Secrets and variables → Actions → Variables):
+#   PUBLIC_CONTACT_EMAIL, PUBLIC_LINKEDIN_URL, PUBLIC_GITHUB_URL
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One production deployment at a time; never cancel one mid-flight. PR builds are
+# grouped per branch and superseded by newer pushes.
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.head_ref) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build and validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          check-latest: true
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Re-encoding the AVIF/WebP hero variants takes ~30 s; reuse them while the source is unchanged.
+      - name: Cache optimized images
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.astro/assets
+          key: astro-assets-${{ hashFiles('src/assets/**', 'src/components/sections/Hero.astro', 'package-lock.json') }}
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Type-check
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+        env:
+          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+          PUBLIC_LINKEDIN_URL: ${{ vars.PUBLIC_LINKEDIN_URL }}
+          PUBLIC_GITHUB_URL: ${{ vars.PUBLIC_GITHUB_URL }}
+
+      - name: Verify output (links, assets, metadata)
+        run: node scripts/verify-dist.mjs
+        env:
+          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,76 @@
+---
+import { Picture } from 'astro:assets';
+import heroImage from '../../assets/hero-wing.jpg';
+import ButtonLink from '../ButtonLink.astro';
+import Icon from '../Icon.astro';
+import { expertise } from '../../data/content';
+import { profile } from '../../data/site';
+---
+
+<section id="home" aria-labelledby="hero-title" class="relative isolate overflow-hidden">
+  {/* Decorative background: original artwork, see /art/hero-wing.svg */}
+  <div class="absolute inset-x-0 top-0 -z-10 h-[44rem] sm:h-[50rem] lg:h-full" aria-hidden="true">
+    <Picture
+      src={heroImage}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[640, 960, 1280, 1600, 1920, 2560]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      quality={70}
+      class="absolute inset-0 size-full object-cover object-[68%_top] xl:object-[center_top]"
+    />
+    {/* Legibility overlays */}
+    <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,20,38,0.78)_0%,rgba(8,20,38,0.5)_45%,rgba(8,20,38,0.2)_100%)] lg:bg-[linear-gradient(90deg,rgba(8,20,38,0.82)_0%,rgba(8,20,38,0.5)_30%,rgba(8,20,38,0)_56%)]"></div>
+    <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,20,38,0.35)_0%,rgba(8,20,38,0)_18%,rgba(8,20,38,0)_55%,rgba(8,20,38,0.8)_82%,#081426_100%)]"></div>
+  </div>
+
+  <div class="mx-auto max-w-[86rem] px-5 pt-32 pb-16 sm:px-8 sm:pt-40 lg:px-12 lg:pt-[9.5rem] lg:pb-20">
+    <div class="max-w-2xl">
+      <p class="eyebrow flex flex-wrap items-center gap-y-1 text-[0.7rem] tracking-[0.17em] sm:text-[0.8rem] sm:tracking-eyebrow">
+        {profile.eyebrow.map((word, i) => (
+          <>
+            {i > 0 && (
+              <span class="mx-2 text-accent-300 sm:mx-4" aria-hidden="true">
+                ·
+              </span>
+            )}
+            <span>{word}</span>
+          </>
+        ))}
+      </p>
+      <h1
+        id="hero-title"
+        class="mt-5 text-[3.25rem] leading-[1.02] font-extrabold tracking-tight text-white sm:text-7xl lg:text-[5.4rem]"
+      >
+        {profile.name}
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate-100 sm:text-xl sm:leading-relaxed">
+        {profile.headline}
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <ButtonLink href="/#about" icon="arrow-right">
+          About Me
+        </ButtonLink>
+        <ButtonLink href="/#projects" variant="secondary">
+          My Work
+        </ButtonLink>
+      </div>
+    </div>
+
+    <h2 class="sr-only">Areas of expertise</h2>
+    <ul class="mt-16 grid gap-4 sm:grid-cols-2 lg:mt-24 lg:grid-cols-4 lg:gap-6">
+      {expertise.map((item) => (
+        <li class="card flex items-start gap-4 bg-midnight-800/60 p-5 backdrop-blur-md sm:p-6">
+          <Icon name={item.icon} class="mt-0.5 size-9 shrink-0 text-accent-500" strokeWidth={1.5} />
+          <div>
+            <h3 class="text-lg font-semibold text-white">{item.title}</h3>
+            <p class="mt-1 text-[0.95rem] leading-snug text-slate-300">{item.description}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

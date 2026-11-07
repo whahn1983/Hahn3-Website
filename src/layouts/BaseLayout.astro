@@ -1,0 +1,112 @@
+---
+import '@fontsource-variable/inter/wght.css';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import '../styles/global.css';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { owner, profile, site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Nav item highlighted on first render. */
+  current?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  current,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, site.url).toString();
+const ogImage = new URL(site.ogImage.path, site.url).toString();
+
+const sameAs = [owner.linkedinUrl, owner.githubUrl].filter(Boolean);
+
+// JSON-LD limited to confirmed facts (see WILLIAM_HAHN_SITE_CONTEXT.md).
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${site.url}/#website`,
+      url: `${site.url}/`,
+      name: site.name,
+      inLanguage: 'en-US',
+      publisher: { '@id': `${site.url}/#person` },
+    },
+    {
+      '@type': 'Person',
+      '@id': `${site.url}/#person`,
+      name: profile.name,
+      url: `${site.url}/`,
+      image: ogImage,
+      description: site.description,
+      jobTitle: profile.currentTitle,
+      worksFor: { '@type': 'Organization', name: profile.currentEmployer },
+      knowsAbout: profile.knowsAbout,
+      ...(sameAs.length ? { sameAs } : {}),
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
+    <meta name="author" content={site.name} />
+    <meta name="theme-color" content={site.themeColor} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="generator" content={Astro.generator} />
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+
+    {/* Open Graph / social */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    {!noindex && <meta property="og:url" content={canonical} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content={String(site.ogImage.width)} />
+    <meta property="og:image:height" content={String(site.ogImage.height)} />
+    <meta property="og:image:alt" content={site.ogImage.alt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={site.ogImage.alt} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  </head>
+  <body class="min-h-dvh">
+    <a
+      href="#main"
+      class="sr-only z-[60] rounded-md bg-white px-4 py-2 font-semibold text-midnight-900 focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+    >
+      Skip to content
+    </a>
+    <Header current={current} />
+    <main id="main" tabindex="-1" class="outline-none">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

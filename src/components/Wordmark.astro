@@ -1,0 +1,10 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className = 'text-2xl' } = Astro.props;
+---
+
+<span class:list={['font-bold tracking-tight text-white', className]}>
+  Hahn<span class="text-accent-500">3</span>
+</span>
