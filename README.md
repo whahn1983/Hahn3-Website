@@ -184,11 +184,8 @@ These are deliberately conservative on the live site until confirmed:
 - **NASA awards** — Spaceflight Awareness honor and program manager’s commendation are not shown
   until official names/wording are confirmed.
 - **Education** — school and graduation year not shown (not confirmed).
-- **IFATC Companion** — shown as an iOS and Android app, described at a high level; confirm
-  which features are publicly shipped before listing them. Only the App Store link is published:
-  add the Google Play URL to its `links` in `src/data/content.ts`.
-- **PyCashFlow** — shown as a production Web and iOS app with no links; add its public website
-  and App Store URLs to `links` when ready, and confirm the listed capabilities.
+- **IFATC Companion** — shown as an iOS and Android app with App Store and Google Play links,
+  described at a high level; confirm which features are publicly shipped before listing them.
 - **Route optimization project** — drafted but unpublished (`published: false`).
 - **Current employer prominence** — Siemens Digital Industries Software is named in About,
   Experience and the JSON-LD `worksFor`; confirm that’s acceptable.

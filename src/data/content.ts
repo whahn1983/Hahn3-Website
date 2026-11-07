@@ -124,7 +124,16 @@ export const capabilities: Capability[] = [
 
 /* --------------------------------- Projects --------------------------------- */
 
-const appStoreUrl = 'https://apps.apple.com/us/app/ifatc-companion/id6785536132';
+/** Owner-confirmed public URLs for the products, reused by Projects and Connect. */
+export const productLinks = {
+  h3: 'https://h3consultingpartners.com',
+  ifatcAppStore: 'https://apps.apple.com/us/app/ifatc-companion/id6785536132',
+  ifatcGooglePlay:
+    'https://play.google.com/store/apps/details?id=com.h3consultingpartners.ifatccompanion',
+  pycashflowSite: 'https://pycashflow.com/',
+  pycashflowWebApp: 'https://app.pycashflow.com/',
+  pycashflowAppStore: 'https://apps.apple.com/us/app/pycashflow/id6763399685',
+} as const;
 
 export type ProjectStatus = 'available' | 'in-development';
 
@@ -134,8 +143,12 @@ export type Project = {
   status: ProjectStatus;
   description: string;
   tags?: string[];
+  /** Key features, shown as a checklist. */
+  highlights?: string[];
   note?: string;
   links?: { label: string; href: string }[];
+  /** Span the full width of the project grid on larger screens. */
+  wide?: boolean;
   /** Set to false to keep a drafted entry out of the published site. */
   published?: boolean;
 };
@@ -149,7 +162,7 @@ export const projects: Project[] = [
       'Independent advisory and technology services focused on practical automation, data-driven solutions, and industry expertise.',
     tags: ['Automation & custom applications', 'Data & AI enablement', 'Industry advisory'],
     note: 'An independent business, separate from my role at Siemens.',
-    links: [{ label: 'Visit h3consultingpartners.com', href: 'https://h3consultingpartners.com' }],
+    links: [{ label: 'Visit h3consultingpartners.com', href: productLinks.h3 }],
   },
   {
     name: 'IFATC Companion',
@@ -161,19 +174,32 @@ export const projects: Project[] = [
     tags: ['iOS', 'Android', 'Flight simulation', 'Aviation'],
     note: 'Independent app; not affiliated with or endorsed by Infinite Flight.',
     links: [
-      { label: 'View on the App Store', href: appStoreUrl },
-      // TODO(owner): add the Google Play listing once its URL is confirmed, e.g.
-      // { label: 'Get it on Google Play', href: 'https://play.google.com/store/apps/details?id=…' },
+      { label: 'View on the App Store', href: productLinks.ifatcAppStore },
+      { label: 'Get it on Google Play', href: productLinks.ifatcGooglePlay },
     ],
   },
   {
     name: 'PyCashFlow',
     kind: 'Web & iOS app',
     status: 'available',
-    // TODO(owner): add public web / App Store URLs to `links` once confirmed.
+    wide: true,
+    // Features as described on https://pycashflow.com/.
     description:
-      'Personal finance cash-flow forecasting software for the web and iOS, with 12-month forecasts, a short-term cash view, scenario planning, and cash-balance warnings.',
-    tags: ['Web', 'iOS', 'Personal finance', 'Forecasting'],
+      'Professional cash-flow forecasting to plan, forecast, and manage cash flow with confidence. Use it in the browser as an installable web app or on iPhone and iPad—in local mode on iOS, self-hosted, or through PyCashFlow Cloud.',
+    highlights: [
+      '12-month forecasts with interactive charts, minimum-balance warnings, and a 90-day transaction preview',
+      'Flexible recurring transactions: multiple frequencies, business-day adjustments, holds, and skips',
+      'Scenario modeling to explore what-if outcomes before committing to changes',
+      'Automated balance updates through Plaid bank sync or email integration',
+      'On-demand, AI-powered cash-flow insights on risks and patterns',
+      'Multi-user access for teams and families, with two-factor and passwordless sign-in',
+    ],
+    tags: ['Web', 'iOS & iPadOS', 'Forecasting', 'Scenario modeling', 'AI insights'],
+    links: [
+      { label: 'Visit pycashflow.com', href: productLinks.pycashflowSite },
+      { label: 'Open the web app', href: productLinks.pycashflowWebApp },
+      { label: 'View on the App Store', href: productLinks.pycashflowAppStore },
+    ],
   },
   {
     name: 'Route optimization',
@@ -201,7 +227,7 @@ export const keyLinks: KeyLink[] = [
   {
     label: 'H3 Consulting Partners',
     description: 'Independent advisory & technology services',
-    href: 'https://h3consultingpartners.com',
+    href: productLinks.h3,
     icon: 'briefcase',
   },
   ...(owner.linkedinUrl
