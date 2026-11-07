@@ -38,12 +38,16 @@ const headingId = `project-${project.name.toLowerCase().replace(/[^a-z0-9]+/g, '
     </ul>
   )}
   {project.note && <p class="mt-5 text-sm text-slate-400">{project.note}</p>}
-  {project.link && (
-    <div class="mt-auto pt-6">
-      <SmartLink href={project.link.href} class="text-link inline-flex items-center gap-2">
-        {project.link.label}
-        <Icon name="external" class="size-4" strokeWidth={2} />
-      </SmartLink>
-    </div>
+  {project.links && project.links.length > 0 && (
+    <ul class="mt-auto flex flex-wrap gap-x-6 gap-y-2 pt-6">
+      {project.links.map((link) => (
+        <li>
+          <SmartLink href={link.href} class="text-link inline-flex items-center gap-2">
+            {link.label}
+            <Icon name="external" class="size-4" strokeWidth={2} />
+          </SmartLink>
+        </li>
+      ))}
+    </ul>
   )}
 </article>

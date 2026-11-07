@@ -67,9 +67,9 @@ Conventions:
 - Every fact comes from `WILLIAM_HAHN_SITE_CONTEXT.md` (the owner’s editorial brief, kept out of
   this repository because it contains internal notes). Anything still awaiting confirmation
   is marked `TODO(owner)` in code and listed under [Open items](#open-items-owner-confirmation).
-- Projects have `status: 'available' | 'in-development'` (grouped automatically) and an
-  optional `published: false` to keep a drafted entry off the site (the route-optimization
-  project is drafted this way).
+- Projects have `status: 'available' | 'in-development'` (grouped automatically), a `links`
+  list (store pages, websites) and an optional `published: false` to keep a drafted entry off
+  the site (the route-optimization project is drafted this way).
 - Links without a confirmed URL are omitted automatically — there are no placeholder `#` links.
 
 ### Optional owner-supplied values
@@ -184,9 +184,11 @@ These are deliberately conservative on the live site until confirmed:
 - **NASA awards** — Spaceflight Awareness honor and program manager’s commendation are not shown
   until official names/wording are confirmed.
 - **Education** — school and graduation year not shown (not confirmed).
-- **IFATC Companion** — described at a high level; confirm which features are publicly shipped
-  before listing them. Google Play availability not confirmed, so no Android link.
-- **PyCashFlow** — shown as _in development_ with no link; confirm status and any public page.
+- **IFATC Companion** — shown as an iOS and Android app, described at a high level; confirm
+  which features are publicly shipped before listing them. Only the App Store link is published:
+  add the Google Play URL to its `links` in `src/data/content.ts`.
+- **PyCashFlow** — shown as a production Web and iOS app with no links; add its public website
+  and App Store URLs to `links` when ready, and confirm the listed capabilities.
 - **Route optimization project** — drafted but unpublished (`published: false`).
 - **Current employer prominence** — Siemens Digital Industries Software is named in About,
   Experience and the JSON-LD `worksFor`; confirm that’s acceptable.
