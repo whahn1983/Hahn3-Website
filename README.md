@@ -72,16 +72,17 @@ Conventions:
   the site (the route-optimization project is drafted this way).
 - Links without a confirmed URL are omitted automatically — there are no placeholder `#` links.
 
-### Optional owner-supplied values
+### Profiles and contact address
 
-LinkedIn, GitHub and a public contact email are **not** in the code. Provide them at build time;
-leave them unset and the related links simply don’t render.
+The owner-confirmed LinkedIn URL, GitHub URL and contact email live in the `confirmed` object
+in `src/data/site.ts` (the email is stored in two parts so it never appears verbatim in the
+source). Edit them there. Build-time variables override them without a code change:
 
 | Variable               | Example                                 | Notes                                 |
 | ---------------------- | --------------------------------------- | ------------------------------------- |
 | `PUBLIC_LINKEDIN_URL`  | `https://www.linkedin.com/in/<handle>/` | Must be `https://` on linkedin.com    |
 | `PUBLIC_GITHUB_URL`    | `https://github.com/<handle>`           | Must be `https://` on github.com      |
-| `PUBLIC_CONTACT_EMAIL` | an approved public address              | Shown in Connect; never in plain HTML |
+| `PUBLIC_CONTACT_EMAIL` | a public address                        | Shown in Connect; never in plain HTML |
 
 - **Locally:** copy `.env.example` to `.env` and fill in values.
 - **In production:** GitHub → repo **Settings → Secrets and variables → Actions → Variables**
@@ -89,8 +90,9 @@ leave them unset and the related links simply don’t render.
   Re-run the workflow (or push) after changing them.
 
 Malformed values fail the build with a clear message rather than publishing a broken link. The
-email address is stored reversed + base64-encoded and assembled in the browser, so it never
-appears as plain text or a `mailto:` link in the HTML.
+email address is written into the page reversed + base64-encoded and assembled in the browser,
+so it never appears as plain text or a `mailto:` link in the HTML; `verify-dist` fails the build
+if any plain-text address slips into the output.
 
 ### Images and artwork
 
@@ -165,7 +167,6 @@ Pull requests get the full build and validation but never deploy.
 
 - [ ] William reviews all copy on a preview build (`npm run build && npm run preview`).
 - [ ] Resolve the open items below (or accept the conservative defaults).
-- [ ] Set repository variables for LinkedIn / GitHub / email if they should appear.
 - [ ] Pages source set to **GitHub Actions**; first deployment from `main` is green.
 - [ ] DNS records in place; custom domain `hahn3.com` saved; domain verified; **Enforce HTTPS** on.
 - [ ] Check <https://hahn3.com>, `https://www.hahn3.com` (redirect), a bad URL (404 page), and
@@ -176,8 +177,6 @@ Pull requests get the full build and validation but never deploy.
 
 These are deliberately conservative on the live site until confirmed:
 
-- **LinkedIn and GitHub profile URLs** — not provided; links hidden until variables are set.
-- **Public contact method** — no email published; Connect points to H3 Consulting Partners.
 - **Earlier roles** — NASA JSC (ISS SE&I), Sunoco / Energy Transfer and Booz Allen Hamilton are
   shown without titles, dates or ordering. Confirm employer of record, exact titles and
   chronology before adding a timeline; Booz Allen role details are not yet known.

@@ -88,8 +88,9 @@ for (const file of htmlFiles) {
   if (/John Hahn/i.test(html)) fail(`${name}: contains "John Hahn"`);
   if (/\sstyle="/.test(html)) fail(`${name}: inline style attribute would be blocked by the CSP`);
 
-  const email = process.env.PUBLIC_CONTACT_EMAIL?.trim();
-  if (email && html.includes(email)) fail(`${name}: contact email appears in plain text`);
+  // Any e-mail address in the HTML is harvestable; the contact address is assembled in JS.
+  const leaked = html.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/);
+  if (leaked) fail(`${name}: e-mail address appears in plain text (${leaked[0]})`);
   if (/href="mailto:/i.test(html))
     fail(`${name}: plain mailto: link found (should be assembled client-side)`);
 
