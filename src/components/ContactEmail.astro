@@ -1,0 +1,35 @@
+---
+/**
+ * Spam-conscious email link. The address is never written to the HTML in plain text:
+ * it is stored reversed + base64-encoded and assembled in the browser.
+ */
+interface Props {
+  email: string;
+}
+const { email } = Astro.props;
+const reversed = [...email].reverse().join('');
+const encoded = btoa(String.fromCharCode(...new TextEncoder().encode(reversed)));
+---
+
+<span data-email={encoded} class="text-slate-300">
+  Email address available with JavaScript enabled.
+</span>
+
+<script>
+  for (const el of document.querySelectorAll<HTMLElement>('[data-email]')) {
+    const address = [
+      ...new TextDecoder().decode(
+        Uint8Array.from(atob(el.dataset.email ?? ''), (c) => c.charCodeAt(0)),
+      ),
+    ]
+      .reverse()
+      .join('');
+    if (!address.includes('@')) continue;
+    const link = document.createElement('a');
+    link.href = `mailto:${address}`;
+    link.textContent = address;
+    link.className = 'text-link';
+    el.replaceChildren(link);
+    el.removeAttribute('data-email');
+  }
+</script>

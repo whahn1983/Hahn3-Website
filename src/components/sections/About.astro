@@ -1,0 +1,63 @@
+---
+import Icon from '../Icon.astro';
+import SectionHeading from '../SectionHeading.astro';
+import { about } from '../../data/content';
+import { profile } from '../../data/site';
+---
+
+<section
+  id="about"
+  aria-labelledby="about-title"
+  class="border-t border-white/5 bg-[radial-gradient(ellipse_at_top_right,rgba(38,132,237,0.08),transparent_55%)]"
+>
+  <div class="mx-auto grid max-w-[86rem] gap-14 px-5 py-20 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:py-28">
+    <div class="lg:col-span-7">
+      <SectionHeading eyebrow="About" title={about.title} id="about-title" />
+      <div class="mt-8 space-y-5 text-lg leading-relaxed text-slate-300">
+        {about.paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+    </div>
+
+    <aside class="lg:col-span-5 lg:pt-2" aria-label="At a glance">
+      <div class="card p-6 sm:p-8">
+        <h3 class="eyebrow text-slate-300">At a glance</h3>
+        <dl class="mt-6 space-y-6">
+          <div class="relative pl-10">
+            <dt class="text-sm text-slate-400">
+              <Icon name="briefcase" class="absolute top-0.5 left-0 size-6 text-accent-500" />
+              Current role
+            </dt>
+            <dd class="mt-0.5 font-semibold text-white">
+              {profile.currentTitle}
+              <span class="block font-normal text-slate-300">{profile.currentEmployer}</span>
+            </dd>
+          </div>
+          <div class="relative pl-10">
+            <dt class="text-sm text-slate-400">
+              <Icon name="education" class="absolute top-0.5 left-0 size-6 text-accent-500" />
+              Education
+            </dt>
+            <dd class="mt-0.5 font-semibold text-white">{profile.education}</dd>
+          </div>
+          <div class="relative pl-10">
+            <dt class="text-sm text-slate-400">
+              <Icon name="layers" class="absolute top-0.5 left-0 size-6 text-accent-500" />
+              Focus
+            </dt>
+            <dd class="mt-2">
+              <ul class="flex flex-wrap gap-2">
+                {about.focus.map((item) => (
+                  <li class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-slate-200">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </aside>
+  </div>
+</section>

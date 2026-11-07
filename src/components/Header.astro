@@ -1,0 +1,139 @@
+---
+import Icon from './Icon.astro';
+import Wordmark from './Wordmark.astro';
+import { nav } from '../data/site';
+
+interface Props {
+  /** id of the nav item to mark as current on first render. */
+  current?: string;
+}
+const { current } = Astro.props;
+
+const linkBase =
+  'relative rounded-sm text-[1.05rem] font-medium text-slate-300 transition-colors hover:text-white aria-[current=true]:text-white';
+const underline =
+  'after:absolute after:inset-x-0 after:-bottom-2 after:h-[3px] after:origin-center after:scale-x-0 after:rounded-full after:bg-accent-500 after:transition-transform after:duration-200 aria-[current=true]:after:scale-x-100';
+---
+
+<header
+  class="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-midnight-900/85 backdrop-blur-md supports-[backdrop-filter]:bg-midnight-900/70"
+  data-site-header
+>
+  <div class="mx-auto flex h-[4.5rem] max-w-[86rem] items-center justify-between px-5 sm:px-8 lg:px-12">
+    <a href="/#home" class="rounded-md" aria-label="Hahn3 — William Hahn, home">
+      <Wordmark class="text-[1.75rem] leading-none sm:text-[2rem]" />
+    </a>
+
+    {/* Desktop navigation */}
+    <nav aria-label="Primary" class="hidden md:block">
+      <ul class="flex items-center gap-8 lg:gap-11">
+        {nav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class:list={[linkBase, underline]}
+              data-nav-link={item.id}
+              aria-current={item.id === current ? 'true' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    {/* Mobile navigation: a native disclosure, so it works without JavaScript */}
+    <details class="group md:hidden" data-mobile-menu>
+      <summary class="-mr-2 flex size-11 cursor-pointer list-none items-center justify-center rounded-lg text-white hover:bg-white/10 [&::-webkit-details-marker]:hidden">
+        <span class="sr-only">Menu</span>
+        <span class="group-open:hidden">
+          <Icon name="menu" class="size-6" strokeWidth={1.8} />
+        </span>
+        <span class="hidden group-open:block">
+          <Icon name="close" class="size-6" strokeWidth={1.8} />
+        </span>
+      </summary>
+      <nav
+        aria-label="Main menu"
+        class="absolute inset-x-0 top-full border-b border-white/10 bg-midnight-900/97 shadow-2xl shadow-black/40"
+      >
+        <ul class="mx-auto flex max-w-[86rem] flex-col px-5 py-3 sm:px-8">
+          {nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="flex min-h-12 items-center rounded-lg px-3 text-lg font-medium text-slate-200 hover:bg-white/5 hover:text-white aria-[current=true]:text-white aria-[current=true]:shadow-[inset_3px_0_0_0_var(--color-accent-500)]"
+                data-nav-link={item.id}
+                aria-current={item.id === current ? 'true' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const menu = header?.querySelector<HTMLDetailsElement>('[data-mobile-menu]');
+
+  if (header && menu) {
+    const summary = menu.querySelector('summary');
+    const close = (restoreFocus = false) => {
+      if (!menu.open) return;
+      menu.open = false;
+      if (restoreFocus) summary?.focus();
+    };
+    menu.addEventListener('click', (event) => {
+      if ((event.target as Element).closest('a')) close();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') close(true);
+    });
+    document.addEventListener('click', (event) => {
+      if (!menu.contains(event.target as Node)) close();
+    });
+    window.matchMedia('(min-width: 48rem)').addEventListener('change', (event) => {
+      if (event.matches) close();
+    });
+  }
+
+  // Highlight the nav item for the section currently in view.
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]'));
+  const ids = [...new Set(links.map((link) => link.dataset.navLink!))];
+  const sections = ids
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null);
+
+  if (sections.length > 0 && 'IntersectionObserver' in window) {
+    const setCurrent = (id: string) => {
+      for (const link of links) {
+        if (link.dataset.navLink === id) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      }
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setCurrent(entry.target.id);
+        }
+      },
+      { rootMargin: '-40% 0px -55% 0px' },
+    );
+    sections.forEach((section) => observer.observe(section));
+
+    // The last section can be too short to reach the trigger line; select it at page end.
+    window.addEventListener(
+      'scroll',
+      () => {
+        const atBottom =
+          window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+        if (atBottom) setCurrent(sections[sections.length - 1].id);
+      },
+      { passive: true },
+    );
+  }
+</script>

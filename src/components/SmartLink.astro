@@ -1,0 +1,23 @@
+---
+/**
+ * Anchor that treats absolute http(s) URLs as external: opens in a new tab with
+ * rel="noopener noreferrer" and announces that to assistive technology.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'a'> & { href: string };
+
+const { href, class: className, ...rest } = Astro.props;
+const isExternal = /^https?:\/\//.test(href) && !href.startsWith('https://hahn3.com');
+---
+
+{isExternal ? (
+  <a href={href} class={className} target="_blank" rel="noopener noreferrer" {...rest}>
+    <slot />
+    <span class="sr-only"> (opens in a new tab)</span>
+  </a>
+) : (
+  <a href={href} class={className} {...rest}>
+    <slot />
+  </a>
+)}

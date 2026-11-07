@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hahn3.com/sitemap-index.xml

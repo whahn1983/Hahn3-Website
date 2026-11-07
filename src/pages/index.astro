@@ -1,0 +1,22 @@
+---
+import About from '../components/sections/About.astro';
+import Connect from '../components/sections/Connect.astro';
+import Experience from '../components/sections/Experience.astro';
+import Hero from '../components/sections/Hero.astro';
+import Intro from '../components/sections/Intro.astro';
+import Projects from '../components/sections/Projects.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+{/*
+  v1 is a single page with anchored sections. Each section is a standalone component,
+  so it can move to its own route (e.g. src/pages/about.astro) later without rewrites.
+*/}
+<BaseLayout current="home">
+  <Hero />
+  <Intro />
+  <About />
+  <Experience />
+  <Projects />
+  <Connect />
+</BaseLayout>
