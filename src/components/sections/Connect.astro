@@ -3,33 +3,37 @@ import ContactEmail from '../ContactEmail.astro';
 import Icon from '../Icon.astro';
 import SmartLink from '../SmartLink.astro';
 import type { IconName } from '../../lib/icons';
+import { productLinks } from '../../data/content';
 import { owner } from '../../data/site';
 
-type Channel = { label: string; description: string; href: string; icon: IconName; cta: string };
+type Channel = {
+  label: string;
+  description: string;
+  icon: IconName;
+  /** External links, or `email` to render the client-assembled address. */
+  links?: { label: string; href: string }[];
+  email?: string;
+};
 
+// Channels without a configured value are left out automatically.
 const channels: Channel[] = [
-  {
-    label: 'H3 Consulting Partners',
-    description: 'For advisory, automation, and data & AI engagements.',
-    href: 'https://h3consultingpartners.com',
-    icon: 'briefcase',
-    cta: 'h3consultingpartners.com',
-  },
-  {
-    label: 'IFATC Companion',
-    description: 'My published iOS app for flight-simulation enthusiasts.',
-    href: 'https://apps.apple.com/us/app/ifatc-companion/id6785536132',
-    icon: 'apps',
-    cta: 'View on the App Store',
-  },
+  ...(owner.contactEmail
+    ? [
+        {
+          label: 'Email',
+          description: 'For direct inquiries and introductions.',
+          icon: 'mail' as const,
+          email: owner.contactEmail,
+        },
+      ]
+    : []),
   ...(owner.linkedinUrl
     ? [
         {
           label: 'LinkedIn',
           description: 'Professional profile and experience.',
-          href: owner.linkedinUrl,
           icon: 'linkedin' as const,
-          cta: 'View profile',
+          links: [{ label: 'View profile', href: owner.linkedinUrl }],
         },
       ]
     : []),
@@ -38,12 +42,17 @@ const channels: Channel[] = [
         {
           label: 'GitHub',
           description: 'Code, tools, and personal projects.',
-          href: owner.githubUrl,
           icon: 'github' as const,
-          cta: 'View profile',
+          links: [{ label: 'View profile', href: owner.githubUrl }],
         },
       ]
     : []),
+  {
+    label: 'H3 Consulting Partners',
+    description: 'For advisory, automation, and data & AI engagements.',
+    icon: 'briefcase',
+    links: [{ label: 'h3consultingpartners.com', href: productLinks.h3 }],
+  },
 ];
 ---
 
@@ -62,33 +71,36 @@ const channels: Channel[] = [
           </h2>
           <span class="mt-5 block h-1 w-10 rounded-full bg-accent-500" aria-hidden="true"></span>
           <p class="mt-6 text-lg leading-relaxed text-slate-300">
-            For consulting engagements, the best way to reach me is through H3 Consulting Partners.
-            I’m always glad to talk about engineering, industrial technology, and building practical
-            products.
+            For consulting engagements, reach out through H3 Consulting Partners. For anything
+            else—engineering, industrial technology, or building practical products—email me or
+            connect on LinkedIn.
           </p>
-          {owner.contactEmail && (
-            <p class="mt-6 flex items-center gap-3 text-lg">
-              <Icon name="mail" class="size-6 shrink-0 text-accent-500" />
-              <ContactEmail email={owner.contactEmail} />
-            </p>
-          )}
         </div>
 
         <ul class="grid gap-4 sm:grid-cols-2 lg:col-span-7">
           {channels.map((channel) => (
-            <li>
-              <SmartLink
-                href={channel.href}
-                class="group flex h-full flex-col rounded-xl border border-white/10 bg-midnight-900/60 p-6 transition-colors hover:border-accent-500/60 hover:bg-midnight-900"
-              >
-                <Icon name={channel.icon} class="size-8 text-accent-500" strokeWidth={1.5} />
-                <span class="mt-4 text-lg font-semibold text-white">{channel.label}</span>
-                <span class="mt-1 text-slate-300">{channel.description}</span>
-                <span class="mt-auto inline-flex items-center gap-2 pt-5 font-semibold text-accent-300">
-                  {channel.cta}
-                  <Icon name="external" class="size-4" strokeWidth={2} />
-                </span>
-              </SmartLink>
+            <li class="flex h-full flex-col rounded-xl border border-white/10 bg-midnight-900/60 p-6">
+              <Icon name={channel.icon} class="size-8 text-accent-500" strokeWidth={1.5} />
+              <h3 class="mt-4 text-lg font-semibold text-white">{channel.label}</h3>
+              <p class="mt-1 text-slate-300">{channel.description}</p>
+              <div class="mt-auto pt-5">
+                {channel.email && <ContactEmail email={channel.email} />}
+                {channel.links && (
+                  <ul class="flex flex-wrap gap-x-5 gap-y-2">
+                    {channel.links.map((link) => (
+                      <li>
+                        <SmartLink
+                          href={link.href}
+                          class="text-link inline-flex items-center gap-2"
+                        >
+                          {link.label}
+                          <Icon name="external" class="size-4" strokeWidth={2} />
+                        </SmartLink>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </li>
           ))}
         </ul>

@@ -118,11 +118,22 @@ export const capabilities: Capability[] = [
   },
   {
     title: 'Practical product building',
-    description: 'Web and iOS applications, automation, and integrations.',
+    description: 'Web, iOS, and Android applications, automation, and integrations.',
   },
 ];
 
 /* --------------------------------- Projects --------------------------------- */
+
+/** Owner-confirmed public URLs for the products, reused by Projects and Connect. */
+export const productLinks = {
+  h3: 'https://h3consultingpartners.com',
+  ifatcAppStore: 'https://apps.apple.com/us/app/ifatc-companion/id6785536132',
+  ifatcGooglePlay:
+    'https://play.google.com/store/apps/details?id=com.h3consultingpartners.ifatccompanion',
+  pycashflowSite: 'https://pycashflow.com/',
+  pycashflowWebApp: 'https://app.pycashflow.com/',
+  pycashflowAppStore: 'https://apps.apple.com/us/app/pycashflow/id6763399685',
+} as const;
 
 export type ProjectStatus = 'available' | 'in-development';
 
@@ -132,8 +143,12 @@ export type Project = {
   status: ProjectStatus;
   description: string;
   tags?: string[];
+  /** Key features, shown as a checklist. */
+  highlights?: string[];
   note?: string;
-  link?: { label: string; href: string };
+  links?: { label: string; href: string }[];
+  /** Span the full width of the project grid on larger screens. */
+  wide?: boolean;
   /** Set to false to keep a drafted entry out of the published site. */
   published?: boolean;
 };
@@ -147,30 +162,44 @@ export const projects: Project[] = [
       'Independent advisory and technology services focused on practical automation, data-driven solutions, and industry expertise.',
     tags: ['Automation & custom applications', 'Data & AI enablement', 'Industry advisory'],
     note: 'An independent business, separate from my role at Siemens.',
-    link: { label: 'Visit h3consultingpartners.com', href: 'https://h3consultingpartners.com' },
+    links: [{ label: 'Visit h3consultingpartners.com', href: productLinks.h3 }],
   },
   {
     name: 'IFATC Companion',
-    kind: 'iOS app',
+    kind: 'iOS & Android app',
     status: 'available',
     // TODO(owner): confirm which features are publicly shipped before listing them.
     description:
       'A companion app for Infinite Flight, designed to bring a more immersive air-traffic-control radio experience to flight simulation.',
-    tags: ['iOS', 'Flight simulation', 'Aviation'],
+    tags: ['iOS', 'Android', 'Flight simulation', 'Aviation'],
     note: 'Independent app; not affiliated with or endorsed by Infinite Flight.',
-    link: {
-      label: 'View on the App Store',
-      href: 'https://apps.apple.com/us/app/ifatc-companion/id6785536132',
-    },
+    links: [
+      { label: 'View on the App Store', href: productLinks.ifatcAppStore },
+      { label: 'Get it on Google Play', href: productLinks.ifatcGooglePlay },
+    ],
   },
   {
     name: 'PyCashFlow',
-    kind: 'Personal project',
-    status: 'in-development',
-    // TODO(owner): confirm status and whether a public landing page exists.
+    kind: 'Web & iOS app',
+    status: 'available',
+    wide: true,
+    // Features as described on https://pycashflow.com/.
     description:
-      'Personal finance cash-flow forecasting software, with web and iOS work exploring 12-month forecasts, a short-term cash view, scenario planning, and cash-balance warnings.',
-    tags: ['Web', 'iOS', 'Forecasting'],
+      'Professional cash-flow forecasting to plan, forecast, and manage cash flow with confidence. Use it in the browser as an installable web app or on iPhone and iPad—in local mode on iOS, self-hosted, or through PyCashFlow Cloud.',
+    highlights: [
+      '12-month forecasts with interactive charts, minimum-balance warnings, and a 90-day transaction preview',
+      'Flexible recurring transactions: multiple frequencies, business-day adjustments, holds, and skips',
+      'Scenario modeling to explore what-if outcomes before committing to changes',
+      'Automated balance updates through Plaid bank sync or email integration',
+      'On-demand, AI-powered cash-flow insights on risks and patterns',
+      'Multi-user access for teams and families, with two-factor and passwordless sign-in',
+    ],
+    tags: ['Web', 'iOS & iPadOS', 'Forecasting', 'Scenario modeling', 'AI insights'],
+    links: [
+      { label: 'Visit pycashflow.com', href: productLinks.pycashflowSite },
+      { label: 'Open the web app', href: productLinks.pycashflowWebApp },
+      { label: 'View on the App Store', href: productLinks.pycashflowAppStore },
+    ],
   },
   {
     name: 'Route optimization',
@@ -193,14 +222,12 @@ export type KeyLink = {
   icon: IconName;
 };
 
-const appStoreUrl = 'https://apps.apple.com/us/app/ifatc-companion/id6785536132';
-
 /** Key links: entries without a confirmed URL are omitted automatically. */
 export const keyLinks: KeyLink[] = [
   {
     label: 'H3 Consulting Partners',
     description: 'Independent advisory & technology services',
-    href: 'https://h3consultingpartners.com',
+    href: productLinks.h3,
     icon: 'briefcase',
   },
   ...(owner.linkedinUrl
@@ -224,9 +251,10 @@ export const keyLinks: KeyLink[] = [
       ]
     : []),
   {
+    // Points at the Projects section, which lists every app and its store links.
     label: 'Published Apps',
-    description: 'IFATC Companion on the App Store',
-    href: appStoreUrl,
+    description: 'iOS, Android, and web applications',
+    href: '/#projects',
     icon: 'apps',
   },
 ];

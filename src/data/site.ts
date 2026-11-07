@@ -55,7 +55,7 @@ export const nav: NavItem[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/* Owner-supplied values (build-time environment / GitHub repository variables) */
+/* Owner-supplied public profiles and contact address                          */
 /* -------------------------------------------------------------------------- */
 
 function optionalUrl(name: string, value: string | undefined, allowedHosts: string[]) {
@@ -82,14 +82,25 @@ function optionalEmail(value: string | undefined) {
   return trimmed;
 }
 
+/**
+ * Owner-confirmed values. Build-time variables (PUBLIC_LINKEDIN_URL, PUBLIC_GITHUB_URL,
+ * PUBLIC_CONTACT_EMAIL — e.g. GitHub repository variables) override them when set.
+ */
+const confirmed = {
+  linkedinUrl: 'https://www.linkedin.com/in/william-hahn-iii/',
+  githubUrl: 'https://github.com/whahn1983',
+  // Stored in parts so the address never appears verbatim in source or HTML; the page
+  // assembles it in the browser (see components/ContactEmail.astro).
+  contactEmail: ['bill', 'hahn3.com'].join('@'),
+};
+
 export const owner = {
-  // TODO(owner): confirm exact LinkedIn profile URL, then set PUBLIC_LINKEDIN_URL.
-  linkedinUrl: optionalUrl('PUBLIC_LINKEDIN_URL', PUBLIC_LINKEDIN_URL, [
+  linkedinUrl: optionalUrl('PUBLIC_LINKEDIN_URL', PUBLIC_LINKEDIN_URL || confirmed.linkedinUrl, [
     'linkedin.com',
     'www.linkedin.com',
   ]),
-  // TODO(owner): confirm exact GitHub profile URL, then set PUBLIC_GITHUB_URL.
-  githubUrl: optionalUrl('PUBLIC_GITHUB_URL', PUBLIC_GITHUB_URL, ['github.com']),
-  // TODO(owner): approve a public contact address, then set PUBLIC_CONTACT_EMAIL.
-  contactEmail: optionalEmail(PUBLIC_CONTACT_EMAIL),
+  githubUrl: optionalUrl('PUBLIC_GITHUB_URL', PUBLIC_GITHUB_URL || confirmed.githubUrl, [
+    'github.com',
+  ]),
+  contactEmail: optionalEmail(PUBLIC_CONTACT_EMAIL || confirmed.contactEmail),
 } as const;

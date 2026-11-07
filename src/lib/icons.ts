@@ -95,6 +95,7 @@ export const icons = {
     ],
   },
   check: { paths: ['m5 12.5 4.5 4.5L19 7.5'] },
+  chart: { paths: ['M4 4v15.5h16', 'm7.5 14.5 3.5-4 3 2.5 5-6.5'] },
 } satisfies Record<string, IconDef>;
 
 export type IconName = keyof typeof icons;
